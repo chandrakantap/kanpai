@@ -11,19 +11,46 @@ class Object(Validator):
             if not isinstance(validator, Validator):
                 raise TypeError(f'Expecting a instance of validator in {key}')
 
-        self._schema = schema
-        self._data_not_object_error = error
-        self._ignore_extra_key = ignore_extra_key
+        self.processors = []
+        self.processors.append({
+            'action': self.__assert_data_schema,
+            'attribs': {
+                'schema':schema,
+                'error': error,
+                'ignore_extra_key':ignore_extra_key
+            }
+        })
 
-    def validate(self, data):
+    def required(self,error='Value is required'):
+        self.processors.append({
+            'action': self.__assert_required,
+            'attribs': {
+                'error': error
+            }
+        })
+
+        return self
+
+    def __assert_required(self,data,attribs):
+        if data is None:
+            return self.validation_error(data,attribs.get('error'))
+        else:
+            return self.validation_success(data)
+
+    def __assert_data_schema(self,data,attribs):
+        if data is None:
+            return self.validation_success(data)
+
         if type(data) is not dict:
-            return self.validation_error(data, {'data': self._data_not_object_error})
+            return self.validation_error(data, {'data': attribs.get('error')})
 
         validation_success = True
         validation_data = data
         validation_error = {}
 
-        for key,validator in self._schema.items():
+        schema = attribs.get('schema',{})
+
+        for key,validator in schema.items():
           validation_result = validator.validate(data.get(key))
           validation_success = validation_success and validation_result['success']
           validation_data[key] = validation_result['data']
@@ -31,9 +58,9 @@ class Object(Validator):
             validation_error[key] = validation_result['error']
 
         
-        if self._ignore_extra_key is False:
+        if attribs.get('ignore_extra_key') is False:
           for key,value in data.items():
-            if self._schema.get(key) is None:
+            if schema.get(key) is None:
               validation_success = False
               validation_error[key] = f"Unexpected {key}"
 
@@ -41,4 +68,5 @@ class Object(Validator):
           return self.validation_error(data,validation_error)
         else:
           return self.validation_success(validation_data)
+
 

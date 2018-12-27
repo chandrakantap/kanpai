@@ -47,3 +47,57 @@ def test_error_on_extra_key_if_ignore_false():
     assert result.get('success') is False
     assert result.get('error') is not None
     assert result.get('error').get('age') is not None
+
+
+def test_success_if_value_is_none_when_not_required():
+    schema = Kanpai.Object({
+        'name': Kanpai.String()
+    })
+
+    result = schema.validate(None)
+
+    assert result.get('success') is True
+
+
+def test_error_if_value_is_none_when_required():
+    schema = Kanpai.Object({
+        'name': Kanpai.String()
+    }).required()
+
+    result = schema.validate(None)
+
+    assert result.get('success') is False
+
+
+def test_error_when_required_inner_object_none():
+    SCHEMA = Kanpai.Object({
+        'phone': Kanpai.Object({
+            'country_code': Kanpai.String().trim().required().max(3),
+            'phone_number': Kanpai.String().trim().required().max(10)
+        }).required("Please provide phone number.")
+    })
+
+    result = SCHEMA.validate({
+
+    })
+
+    assert result.get('success') is False
+    assert result.get('error').get('phone') is not None
+    assert result.get('error').get('phone') == 'Please provide phone number.'
+
+
+def test_success_when_optional_inner_object_none():
+    SCHEMA = Kanpai.Object({
+        'name': Kanpai.String().required(),
+        'phone': Kanpai.Object({
+            'country_code': Kanpai.String().trim().required().max(3),
+            'phone_number': Kanpai.String().trim().required().max(10)
+        })
+    })
+
+    result = SCHEMA.validate({
+        'name': 'Kanpai'
+    })
+
+    assert result.get('success') is True
+    assert result.get('error') is  None
