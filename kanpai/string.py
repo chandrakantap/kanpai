@@ -44,26 +44,20 @@ class String(Validator):
             return self.validation_success(data)
 
     def max(self, max_length, error=None):
-        if max_length is None or type(max_length) is not int:
+        if type(max_length) is not int:
             raise ValueError(
                 'value for max_length is expected to be an integer')
 
         if error is None:
-            self.processors.append({
-                'action': self.__assert_max,
-                'attribs': {
-                    'max_length': max_length,
-                    'error': f"Maximum length allowed is {max_length}"
-                }
-            })
-        else:
-            self.processors.append({
-                'action': self.__assert_max,
-                'attribs': {
-                    'max_length': max_length,
-                    'error': error
-                }
-            })
+            error = f"Maximum length allowed is {max_length}"
+
+        self.processors.append({
+            'action': self.__assert_max,
+            'attribs': {
+                'max_length': max_length,
+                'error': error
+            }
+        })
 
         return self
 
