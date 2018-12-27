@@ -5,7 +5,8 @@ with open("README.md", "r") as fh:
 
 setup(
     name="kanpai",
-    version="0.0.3",
+    version="0.0.5",
+    keywords="schema json validation request-validation input-validation",
     author="Chandrakanta Pal",
     author_email="pal.chandrakanta@gmail.com",
     description="Python JSON schema validator with better error message",
