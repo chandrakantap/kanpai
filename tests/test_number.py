@@ -69,9 +69,13 @@ def test_success_when_data_is_none_and_not_required():
     assert result.get('data') is None
     assert result.get('error') is None
 
-def test_error_on_invalid_range_data_type():
+def test_error_on_invalid_start_range_data_type():
     with pytest.raises(ValueError):
-        schema = Kanpai.Number().required().between('qwe', 'rsd')
+        schema = Kanpai.Number().required().between('qwe', 34)
+
+def test_error_on_invalid_end_range_data_type():
+    with pytest.raises(ValueError):
+        schema = Kanpai.Number().required().between(65,'adasd')
 
 def test_error_when_data_is_under_the_range():
     schema = Kanpai.Number().between(12.45,45.89,'Data must be within range.')

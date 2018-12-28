@@ -48,6 +48,22 @@ def test_error_on_extra_key_if_ignore_false():
     assert result.get('error') is not None
     assert result.get('error').get('age') is not None
 
+def test_success_on_extra_key_if_ignore_true():
+    schema = Kanpai.Object({
+        'name': Kanpai.String('User name must be string').trim().required('Please provide user name'),
+        'company': Kanpai.String('Company must be string').trim().required('Please provide company name')
+    }, ignore_extra_key=True)
+
+    result = schema.validate({
+        'name': '    Chandrakanta     ',
+        'company': 'kanpai     ',
+        'age': 32
+    })
+
+    assert result.get('success') is True
+    assert result.get('error') is  None
+    assert result.get('data').get('age') == 32
+
 
 def test_success_if_value_is_none_when_not_required():
     schema = Kanpai.Object({
@@ -67,6 +83,15 @@ def test_error_if_value_is_none_when_required():
     result = schema.validate(None)
 
     assert result.get('success') is False
+
+def test_success_if_value_is_present_when_required():
+    schema = Kanpai.Object({
+        'name': Kanpai.String()
+    }).required()
+
+    result = schema.validate({'name':'kanpai'})
+
+    assert result.get('success') is True
 
 
 def test_error_when_required_inner_object_none():
@@ -101,3 +126,12 @@ def test_success_when_optional_inner_object_none():
 
     assert result.get('success') is True
     assert result.get('error') is  None
+
+
+def test_error_when_data_is_not_dict_type():
+    schema = Kanpai.Object({
+        'name': Kanpai.String()
+    })
+    result = schema.validate(['its not a dict'])
+    assert result.get('success') is False
+    assert result.get('error').get('data') is not None

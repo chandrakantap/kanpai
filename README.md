@@ -58,3 +58,12 @@ Installation
 Use [pip](http://pip-installer.org)
 
     pip install kanpai
+
+
+Test
+----
+
+```python
+pytest # to run tests
+pytest --cov-report=html  --cov-branch --cov=kanpai # to generate coverage report
+```

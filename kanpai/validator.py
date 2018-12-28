@@ -1,6 +1,4 @@
 class Validator(object):
-    def __init__(self):
-        self.processors = []
 
     def validation_error(self, data, error):
         return {
