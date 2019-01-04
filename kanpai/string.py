@@ -1,5 +1,5 @@
 from .validator import Validator
-
+import re
 
 class String(Validator):
 
@@ -70,3 +70,21 @@ class String(Validator):
             'attribs': None
         })
         return self
+
+    def __assert_pattern(self, data, attribs):
+        if data is None:
+            return self.validation_success(data)
+        if re.match(attribs['pattern'], data):
+            return self.validation_success(data)
+        else:
+            return self.validation_error(data, attribs['error'])
+
+
+    def match(self, pattern, error="pattern doesn't match" ):
+        self.processors.append({
+            'action': self.__assert_pattern,
+            'attribs': {
+                'error':error,
+                'pattern':pattern
+            }
+        })
