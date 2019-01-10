@@ -15,13 +15,13 @@ class Object(Validator):
         self.processors.append({
             'action': self.__assert_data_schema,
             'attribs': {
-                'schema':schema,
+                'schema': schema,
                 'error': error,
-                'ignore_extra_key':ignore_extra_key
+                'ignore_extra_key': ignore_extra_key
             }
         })
 
-    def required(self,error='Value is required'):
+    def required(self, error='Value is required'):
         self.processors.append({
             'action': self.__assert_required,
             'attribs': {
@@ -31,13 +31,13 @@ class Object(Validator):
 
         return self
 
-    def __assert_required(self,data,attribs):
+    def __assert_required(self, data, attribs):
         if data is None:
-            return self.validation_error(data,attribs.get('error'))
+            return self.validation_error(data, attribs.get('error'))
         else:
             return self.validation_success(data)
 
-    def __assert_data_schema(self,data,attribs):
+    def __assert_data_schema(self, data, attribs):
         if data is None:
             return self.validation_success(data)
 
@@ -48,25 +48,47 @@ class Object(Validator):
         validation_data = data
         validation_error = {}
 
-        schema = attribs.get('schema',{})
+        schema = attribs.get('schema', {})
 
-        for key,validator in schema.items():
-          validation_result = validator.validate(data.get(key))
-          validation_success = validation_success and validation_result['success']
-          validation_data[key] = validation_result['data']
-          if validation_result['success'] is False:
-            validation_error[key] = validation_result['error']
+        for key, validator in schema.items():
+            validation_result = validator.validate(data.get(key))
+            validation_success = validation_success and validation_result['success']
+            validation_data[key] = validation_result['data']
+            if validation_result['success'] is False:
+                validation_error[key] = validation_result['error']
 
-        
         if attribs.get('ignore_extra_key') is False:
-          for key,value in data.items():
-            if schema.get(key) is None:
-              validation_success = False
-              validation_error[key] = f"Unexpected {key}"
+            for key, value in data.items():
+                if schema.get(key) is None:
+                    validation_success = False
+                    validation_error[key] = f"Unexpected {key}"
 
         if validation_success is False:
-          return self.validation_error(data,validation_error)
+            return self.validation_error(data, validation_error)
         else:
-          return self.validation_success(validation_data)
+            return self.validation_success(validation_data)
 
+    def assert_equal_field(self, field_one, field_two, error=None):
+        if error is None:
+            error = f'{field_one} and {field_two} must be same.'
+        self.processors.append({
+            'action': self.__assert_field_equal,
+            'attribs': {
+                'field_one': field_one,
+                'field_two': field_two,
+                'error': error
+            }
+        })
+        return self
 
+    def __assert_field_equal(self, data, attribs):
+        if data is None:
+            return self.validation_success(data)
+
+        field_one = data.get(attribs.get('field_one'))
+        field_two = data.get(attribs.get('field_two'))
+
+        if field_one == field_two:
+            return self.validation_success(data)
+        else:
+            return self.validation_error(data, {attribs.get('field_two'): attribs.get('error')})
