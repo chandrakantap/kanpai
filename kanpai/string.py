@@ -1,7 +1,23 @@
 from .validator import Validator
 import re
 
+
 class String(Validator):
+
+    def __assert_required(self, data, attribs):
+        if data is None or len(data) == 0:
+            return self.validation_error(data, attribs['error'])
+        else:
+            return self.validation_success(data)
+
+    def required(self, error='Value is required'):
+        self.processors.append({
+            'action': self.__assert_required,
+            'attribs': {
+                'error': error
+            }
+        })
+        return self
 
     def __assert_string(self, data, attribs):
         if data is None:
@@ -21,21 +37,6 @@ class String(Validator):
                 'error': error
             }
         })
-
-    def __assert_required(self, data, attribs):
-        if data is None or len(data) is 0:
-            return self.validation_error(data, attribs['error'])
-        else:
-            return self.validation_success(data)
-
-    def required(self, error='Value is required'):
-        self.processors.append({
-            'action': self.__assert_required,
-            'attribs': {
-                'error': error
-            }
-        })
-        return self
 
     def __assert_max(self, data, attribs):
         if data is not None and len(data) > attribs['max_length']:
@@ -79,12 +80,11 @@ class String(Validator):
         else:
             return self.validation_error(data, attribs['error'])
 
-
-    def match(self, pattern, error="pattern doesn't match" ):
+    def match(self, pattern, error="pattern doesn't match"):
         self.processors.append({
             'action': self.__assert_pattern,
             'attribs': {
-                'error':error,
-                'pattern':pattern
+                'error': error,
+                'pattern': pattern
             }
         })

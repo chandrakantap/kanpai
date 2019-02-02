@@ -1,7 +1,7 @@
-from .validator import Validator
+from .validator import Validator, RequiredMixin
 
 
-class Array(Validator):
+class Array(RequiredMixin, Validator):
     def __init__(self, error="Expecting an array."):
         self.processors = []
         self.processors.append({
@@ -17,25 +17,10 @@ class Array(Validator):
         else:
             return self.validation_error(data, attribs.get('error'))
 
-    def required(self, error='Value is required'):
-        self.processors.append({
-            'action': self.__assert_required,
-            'attribs': {
-                'error': error
-            }
-        })
-
-        return self
-
-    def __assert_required(self, data, attribs):
-        if data is None:
-            return self.validation_error(data, attribs.get('error'))
-        else:
-            return self.validation_success(data)
-
     def of(self, element_validator):
         if not isinstance(element_validator, Validator):
-            raise TypeError(f'Expecting a instance of validator in element_validator')
+            raise TypeError(
+                f'Expecting a instance of validator in element_validator')
 
         self.processors.append({
             'action': self.__validate_elements,

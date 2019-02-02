@@ -1,11 +1,11 @@
-from setuptools import setup,find_packages
+from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
     name="kanpai",
-    version="0.1.3",
+    version="0.1.7",
     keywords="schema json validation request-validation input-validation",
     author="Chandrakanta Pal",
     author_email="pal.chandrakanta@gmail.com",

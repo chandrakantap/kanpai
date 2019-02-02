@@ -1,7 +1,7 @@
-from .validator import Validator
+from .validator import Validator, RequiredMixin
 
 
-class Number(Validator):
+class Number(RequiredMixin, Validator):
 
     def __init__(self, error="Value must be a number."):
         self.processors = []
@@ -35,19 +35,6 @@ class Number(Validator):
 
     def __convert_to_int(self, data, attribs):
         return self.validation_success(data) if data is None else self.validation_success(int(data))
-
-    def required(self, error="Value is required"):
-        self.processors.append({
-            'action': self.__assert_required,
-            'attribs': {
-                'error': error
-            }
-        })
-
-        return self
-
-    def __assert_required(self, data, attribs):
-        return self.validation_error(data, attribs.get('error')) if data is None else self.validation_success(data)
 
     def between(self, start, end, error=None):
         type_of_start = type(start)

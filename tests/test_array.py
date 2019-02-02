@@ -1,6 +1,7 @@
 import kanpai as Kanpai
 import pytest
 
+
 def test_error_when_data_is_not_array():
     schema = Kanpai.Array()
     result = schema.validate('not an array')
@@ -61,7 +62,7 @@ def test_success_when_element_validation_success():
 
 def test_error_when_invalid_element_validator():
     with pytest.raises(TypeError):
-        schema = Kanpai.Array().of("kanpai").required()
+        Kanpai.Array().of("kanpai").required()
 
 
 def test_success_when_element_validation_on_none_data():

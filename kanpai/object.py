@@ -1,7 +1,7 @@
-from .validator import Validator
+from .validator import Validator, RequiredMixin
 
 
-class Object(Validator):
+class Object(RequiredMixin, Validator):
 
     def __init__(self, schema, error="Expecting an object.", ignore_extra_key=False):
         if type(schema) is not dict:
@@ -20,22 +20,6 @@ class Object(Validator):
                 'ignore_extra_key': ignore_extra_key
             }
         })
-
-    def required(self, error='Value is required'):
-        self.processors.append({
-            'action': self.__assert_required,
-            'attribs': {
-                'error': error
-            }
-        })
-
-        return self
-
-    def __assert_required(self, data, attribs):
-        if data is None:
-            return self.validation_error(data, attribs.get('error'))
-        else:
-            return self.validation_success(data)
 
     def __assert_data_schema(self, data, attribs):
         if data is None:

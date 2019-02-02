@@ -17,8 +17,12 @@ def test_error_if_schema_member_is_not_validator():
 
 def test_should_validate_properly():
     schema = Kanpai.Object({
-        'name': Kanpai.String('User name must be string').trim().required('Please provide user name'),
-        'company': Kanpai.String('Company must be string').trim().required('Please provide company name')
+        'name': (Kanpai.String('User name must be string')
+                 .trim()
+                 .required('Please provide user name')),
+        'company': (Kanpai.String('Company must be string')
+                    .trim()
+                    .required('Please provide company name'))
     })
 
     result = schema.validate({
@@ -34,8 +38,12 @@ def test_should_validate_properly():
 
 def test_error_on_extra_key_if_ignore_false():
     schema = Kanpai.Object({
-        'name': Kanpai.String('User name must be string').trim().required('Please provide user name'),
-        'company': Kanpai.String('Company must be string').trim().required('Please provide company name')
+        'name': (Kanpai.String('User name must be string')
+                 .trim()
+                 .required('Please provide user name')),
+        'company': (Kanpai.String('Company must be string')
+                    .trim()
+                    .required('Please provide company name'))
     }, ignore_extra_key=False)
 
     result = schema.validate({
@@ -51,8 +59,12 @@ def test_error_on_extra_key_if_ignore_false():
 
 def test_success_on_extra_key_if_ignore_true():
     schema = Kanpai.Object({
-        'name': Kanpai.String('User name must be string').trim().required('Please provide user name'),
-        'company': Kanpai.String('Company must be string').trim().required('Please provide company name')
+        'name': (Kanpai.String('User name must be string')
+                 .trim()
+                 .required('Please provide user name')),
+        'company': (Kanpai.String('Company must be string')
+                    .trim()
+                    .required('Please provide company name'))
     }, ignore_extra_key=True)
 
     result = schema.validate({
@@ -157,12 +169,14 @@ def test_default_error_when_fields_not_equal():
         'confirm_password': 'password and confirm_password must be same.'
     }
 
+
 def test_user_defined_error_when_fields_not_equal():
     schema = Kanpai.Object({
         'name': Kanpai.String().required(),
         'password': Kanpai.String().trim().required(),
         'confirm_password': Kanpai.String().trim().required()
-    }).assert_equal_field('password', 'confirm_password',error="Please re-type password correctly.")
+    }).assert_equal_field('password', 'confirm_password',
+                          error="Please re-type password correctly.")
 
     result = schema.validate({
         'name': 'Kanpai',
@@ -174,6 +188,7 @@ def test_user_defined_error_when_fields_not_equal():
     assert result.get('error') == {
         'confirm_password': 'Please re-type password correctly.'
     }
+
 
 def test_success_when_fields_are_equal():
     schema = Kanpai.Object({
@@ -190,6 +205,7 @@ def test_success_when_fields_are_equal():
 
     assert result.get('success') is True
     assert result.get('error') is None
+
 
 def test_no_exception_with_equal_validator_when_data_is_none():
     schema = Kanpai.Object({
