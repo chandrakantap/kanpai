@@ -1,5 +1,6 @@
 import kanpai as Kanpai
 import pytest
+from uuid import UUID
 
 
 def test_error_if_schema_is_not_dict():
@@ -218,3 +219,21 @@ def test_no_exception_with_equal_validator_when_data_is_none():
 
     assert result.get('success') is True
     assert result.get('error') is None
+
+
+def test_successful_validation():
+    schema = Kanpai.Object({
+        'name': Kanpai.String(),
+        'permissions': Kanpai.Array().of(Kanpai.UUID()).required()
+    }).required()
+
+    result = schema.validate({
+        'permissions': ['a7e459b9-0ec9-41f6-8c78-149ad76c943d']
+    })
+    assert result == {
+        'success': True,
+        'data': {
+            'permissions': [UUID('a7e459b9-0ec9-41f6-8c78-149ad76c943d')],
+            'name': None
+        },
+        'error': None}

@@ -55,3 +55,51 @@ class Array(RequiredMixin, Validator):
             'data': validated_data,
             'error': validation_error
         }
+
+    def min(self, min_length, error=None):
+        if type(min_length) is not int:
+            raise ValueError(
+                'value for min_length is expected to be an integer')
+
+        if error is None:
+            error = f"At least {min_length} element required."
+
+        self.processors.append({
+            'action': self.__assert_min,
+            'attribs': {
+                'min_length': min_length,
+                'error': error
+            }
+        })
+
+        return self
+
+    def __assert_min(self, data, attribs):
+        if data is not None and len(data) < attribs['min_length']:
+            return self.validation_error(data, attribs['error'])
+        else:
+            return self.validation_success(data)
+
+    def max(self, max_length, error=None):
+        if type(max_length) is not int:
+            raise ValueError(
+                'value for max_length is expected to be an integer')
+
+        if error is None:
+            error = f"Maximum {max_length} element allowed."
+
+        self.processors.append({
+            'action': self.__assert_max,
+            'attribs': {
+                'max_length': max_length,
+                'error': error
+            }
+        })
+
+        return self
+
+    def __assert_max(self, data, attribs):
+        if data is not None and len(data) > attribs['max_length']:
+            return self.validation_error(data, attribs['error'])
+        else:
+            return self.validation_success(data)

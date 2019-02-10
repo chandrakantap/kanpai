@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="kanpai",
-    version="0.1.7",
+    version="0.1.8",
     keywords="schema json validation request-validation input-validation",
     author="Chandrakanta Pal",
     author_email="pal.chandrakanta@gmail.com",

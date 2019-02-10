@@ -74,3 +74,15 @@ def test_success_when_element_validation_on_none_data():
     result = schema.validate(None)
 
     assert result.get('success') is True
+
+
+def test_error_when_minimum_element_not_there():
+    schema = Kanpai.Array().of(Kanpai.String()).min(1)
+    result = schema.validate([])
+    assert result.get('success') is False
+
+
+def test_error_when_more_than_maximum_element():
+    schema = Kanpai.Array().of(Kanpai.String()).max(3)
+    result = schema.validate(['CKP', 'RZSD', 'LOMP', 'LKUIO'])
+    assert result.get('success') is False
