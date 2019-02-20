@@ -2,17 +2,24 @@ from .validator import Validator, RequiredMixin
 
 
 class Array(RequiredMixin, Validator):
-    def __init__(self, error="Expecting an array."):
+    def __init__(self, error="Expecting an array.", convert_none_to_empty=False):
         self.processors = []
         self.processors.append({
             'action': self.__assert_array,
             'attribs': {
-                'error': error
+                'error': error,
+                'convert_none_to_empty': convert_none_to_empty
             }
         })
 
     def __assert_array(self, data, attribs):
-        if data is None or type(data) is list:
+        if data is None:
+            if attribs.get('convert_none_to_empty', False):
+                return self.validation_success([])
+            else:
+                return self.validation_success(data)
+
+        if type(data) is list or type(data) is tuple:
             return self.validation_success(data)
         else:
             return self.validation_error(data, attribs.get('error'))
