@@ -63,7 +63,14 @@ class String(Validator):
         return self
 
     def __trim(self, data, attribs):
-        return self.validation_success(data.strip() if data is not None else None)
+        if data is None:
+            return self.validation_success(None)
+
+        trimmed_data = data.strip()
+        if len(data) <= 0:
+            return self.validation_success(None)
+        else:
+            return self.validation_success(trimmed_data)
 
     def trim(self):
         self.processors.append({
