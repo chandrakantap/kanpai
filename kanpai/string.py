@@ -95,3 +95,24 @@ class String(Validator):
                 'pattern': pattern
             }
         })
+        return self
+
+    def __assert_any_of(self, data, attribs):
+        if data is None:
+            return self.validation_success(data)
+
+        choices = attribs.get('choices', [])
+        if data in choices:
+            return self.validation_success(data)
+        else:
+            return self.validation_error(data, attribs['error'])
+
+    def anyOf(self, choices=[], error="Invalid data received"):
+        self.processors.append({
+            'action': self.__assert_any_of,
+            'attribs': {
+                'choices': choices,
+                'error': error
+            }
+        })
+        return self
