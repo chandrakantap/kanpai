@@ -1,7 +1,7 @@
 from .validator import Validator, RequiredMixin
 
 
-class Array(RequiredMixin, Validator):
+class Array(RequiredMixin):
     def __init__(self, error="Expecting an array.", convert_none_to_empty=False):
         self.processors = []
         self.processors.append({

@@ -1,5 +1,8 @@
 class Validator(object):
 
+    def __init__(self, error='Value must be a string'):
+        self.processors = []
+
     def validation_error(self, data, error):
         return {
             'success': False,
@@ -32,7 +35,7 @@ class Validator(object):
             return last_processor_result
 
 
-class RequiredMixin(object):
+class RequiredMixin(Validator):
     def __assert_required(self, data, attribs):
         if data is None:
             return self.validation_error(data, attribs['error'])

@@ -1,7 +1,7 @@
 from .validator import Validator, RequiredMixin
 
 
-class Object(RequiredMixin, Validator):
+class Object(RequiredMixin):
 
     def __init__(self, schema, error="Expecting an object.", ignore_extra_key=False):
         if type(schema) is not dict:

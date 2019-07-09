@@ -1,7 +1,7 @@
-from .validator import Validator, RequiredMixin
+from .validator import RequiredMixin
 
 
-class Number(RequiredMixin, Validator):
+class Number(RequiredMixin):
 
     def __init__(self, error="Value must be a number."):
         self.processors = []

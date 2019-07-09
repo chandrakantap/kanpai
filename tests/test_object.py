@@ -1,4 +1,4 @@
-import kanpai as Kanpai
+from kanpai import Kanpai
 import pytest
 from uuid import UUID
 

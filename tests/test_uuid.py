@@ -1,4 +1,4 @@
-import kanpai as Kanpai
+from kanpai import Kanpai
 
 
 def test_error_if_not_valid_uuid():

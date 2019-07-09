@@ -1,8 +1,8 @@
-from .validator import Validator, RequiredMixin
+from .validator import RequiredMixin
 from uuid import UUID as pyUUID
 
 
-class UUID(RequiredMixin, Validator):
+class UUID(RequiredMixin):
 
     def __assert_uuid(self, data, attribs):
         if data is None:
