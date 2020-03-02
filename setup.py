@@ -11,6 +11,7 @@ setup(
     author_email="pal.chandrakanta@gmail.com",
     description="Python JSON schema validator with better error message",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url="https://github.com/chandrakantap/kanpai",
     packages=find_packages(exclude=("tests",)),
     classifiers=[

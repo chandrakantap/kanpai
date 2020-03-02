@@ -20,8 +20,8 @@ class Number(RequiredMixin):
             return self.validation_error(data, attribs['error'])
 
         try:
-            data = float(data)
-            return self.validation_success(data)
+            result = float(data)
+            return self.validation_success(result)
         except ValueError:
             return self.validation_error(data, attribs['error'])
 
