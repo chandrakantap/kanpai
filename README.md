@@ -5,7 +5,7 @@ Example
 Here is a quick example
 
 ```python
-import kanpai as Kanpai
+from kanpai import Kanpai
 
 schema = Kanpai.Object({
         'first_name': (Kanpai.String(error='User first name must be string.')
