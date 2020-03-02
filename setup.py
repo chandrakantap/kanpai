@@ -5,13 +5,12 @@ with open("README.md", "r") as fh:
 
 setup(
     name="kanpai",
-    version="0.1.12",
+    use_scm_version=True,
     keywords="schema json validation request-validation input-validation",
     author="Chandrakanta Pal",
     author_email="pal.chandrakanta@gmail.com",
     description="Python JSON schema validator with better error message",
     long_description=long_description,
-    long_description_content_type="text/markdown",
     url="https://github.com/chandrakantap/kanpai",
     packages=find_packages(exclude=("tests",)),
     classifiers=[
