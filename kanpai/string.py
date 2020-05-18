@@ -62,6 +62,30 @@ class String(Validator):
 
         return self
 
+    def __assert_min(self, data, attribs):
+        if data is not None and len(data) < attribs['min_length']:
+            return self.validation_error(data, attribs['error'])
+        else:
+            return self.validation_success(data)
+
+    def min(self, min_length, error=None):
+        if type(min_length) is not int:
+            raise ValueError(
+                'value for min_length is expected to be an integer')
+
+        if error is None:
+            error = f"Minimum length required is {min_length}"
+
+        self.processors.append({
+            'action': self.__assert_min,
+            'attribs': {
+                'min_length': min_length,
+                'error': error
+            }
+        })
+
+        return self
+
     def __trim(self, data, attribs):
         if data is None:
             return self.validation_success(None)
@@ -107,7 +131,7 @@ class String(Validator):
         else:
             return self.validation_error(data, attribs['error'])
 
-    def anyOf(self, choices=[], error="Invalid data received"):
+    def anyof(self, choices=[], error="Invalid data received"):
         self.processors.append({
             'action': self.__assert_any_of,
             'attribs': {
