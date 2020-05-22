@@ -1,5 +1,4 @@
 from kanpai import Kanpai
-import pytest
 
 
 def test_error_if_data_is_none_when_required():

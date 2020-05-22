@@ -93,6 +93,6 @@ def test_sucess_when_data_is_none_for_anyof():
 
 def test_sucess_when_data_is_in_choice_anyof():
     '''anyof test'''
-    schema = Kanpai.String().trim().anyof(('PY', 'JAVA', 'TS'))
+    schema = Kanpai.String().trim().anyOf(('PY', 'JAVA', 'TS'))
     result = schema.validate('TS')
     assert result.get('success') is True

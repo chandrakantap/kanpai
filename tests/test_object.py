@@ -237,3 +237,20 @@ def test_successful_validation():
             'name': None
         },
         'error': None}
+
+
+def test_must_validate_all_invalid_data():
+    schema = Kanpai.Object({
+        'name': Kanpai.String().required(),
+        'password': Kanpai.String().trim().required(),
+        'confirm_password': Kanpai.String().trim().required()
+    }).assert_equal_field('password', 'confirm_password')
+
+    result = schema.validate({})
+
+    assert result.get('success') is False
+    assert result.get('error') == {
+        'name': 'Value is required',
+        'password': 'Value is required',
+        'confirm_password': 'Value is required'
+    }

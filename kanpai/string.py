@@ -131,6 +131,9 @@ class String(Validator):
         else:
             return self.validation_error(data, attribs['error'])
 
+    def anyOf(self, choices=None, error=None):
+        return self.anyof(choices, error)
+
     def anyof(self, choices=[], error="Invalid data received"):
         self.processors.append({
             'action': self.__assert_any_of,
