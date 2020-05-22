@@ -96,3 +96,16 @@ def test_sucess_when_data_is_in_choice_anyof():
     schema = Kanpai.String().trim().anyOf(('PY', 'JAVA', 'TS'))
     result = schema.validate('TS')
     assert result.get('success') is True
+
+
+def test_should_not_mutate():
+    validator = Kanpai.String().trim().required()
+    full_name = "   Quentin Tarantino "
+    sresult = validator.validate(full_name)
+    assert sresult == {
+        'success': True,
+        'error': None,
+        'data': 'Quentin Tarantino'
+    }
+
+    assert full_name == "   Quentin Tarantino "
