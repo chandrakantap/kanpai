@@ -28,10 +28,11 @@ def test_validate_stringandpattern_success():
 
 # test string data and invalid email pattern
 def test_validate_stringandpattern_failure():
-    schema = email.Email()
+    schema = email.Email(error="Please provide a valid email")
     result = schema.validate('a@bcom')
     assert result['success'] is False
     assert result['error'] is not None
+    assert result['error'] == "Please provide a valid email"
 
 
 # test email as required with data provided
